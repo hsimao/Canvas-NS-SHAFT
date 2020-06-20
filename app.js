@@ -231,6 +231,18 @@ class Game {
       this.player.lastBlock = null
     }
 
+    // 碰到上方邊界, 彈跳起來並扣血量
+    if (this.player.p.y - this.player.height < 0) {
+      // hurt 為緩衝效果
+      if (this.hurt === 0) {
+        this.hurt = 1
+        this.player.bloodDelta(-4)
+        this.player.v.y = 2
+        this.player.p.y = 10
+        TweenMax.to(this, 0.5, { hurt: 0 })
+      }
+    }
+
     // 過濾掉已經超過畫面的階梯
     this.walls = this.walls.filter(wall => wall.active)
   }
@@ -253,6 +265,10 @@ class Game {
     ctx.stroke()
 
     ctx.restore()
+
+    // 扣血紅畫面
+    ctx.fillStyle = `rgba(255, 0, 0, ${this.hurt})`
+    ctx.fillRect(0, 0, ww, wh)
 
     this.player.drawBlood()
   }
