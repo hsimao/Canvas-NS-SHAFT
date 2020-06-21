@@ -235,10 +235,10 @@ class Game {
     if (this.player.p.y - this.player.height < 0) {
       // hurt 為緩衝效果
       if (this.hurt === 0) {
-        this.hurt = 1
         this.player.bloodDelta(-4)
         this.player.v.y = 2
         this.player.p.y = 10
+        this.hurt = 1
         TweenMax.to(this, 0.5, { hurt: 0 })
       }
     }
@@ -437,6 +437,9 @@ class Wall {
     if (this.type === 'hurt') {
       if (player.lastBlock !== this) {
         player.bloodDelta(-5)
+
+        game.hurt = 1
+        TweenMax.to(game, 0.5, { hurt: 0 })
       }
     }
 
