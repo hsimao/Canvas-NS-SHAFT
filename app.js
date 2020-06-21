@@ -187,6 +187,7 @@ class Game {
   }
 
   update() {
+    this.time++
     this.player.update()
 
     // 處理左右鍵控制角色位置
@@ -282,6 +283,15 @@ class Game {
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)'
     ctx.stroke()
 
+    // 繪製最上方刺刺
+    ctx.beginPath()
+    let span = this.width / 60
+    for (let i = 0; i <= this.width / span; i++) {
+      ctx.lineTo(i * span, (i % 2) * 30)
+    }
+    ctx.fillStyle = 'white'
+    ctx.fill()
+
     ctx.restore()
 
     // 扣血紅畫面
@@ -289,6 +299,12 @@ class Game {
     ctx.fillRect(0, 0, ww, wh)
 
     this.player.drawBlood()
+
+    ctx.font = '36px Ariel'
+    ctx.fillStyle = 'white'
+    ctx.fillText(`地下: ${parseInt(this.time / 100)} 階`, 26, 100)
+
+    ctx.font = '10px Ariel'
   }
 
   start() {
