@@ -344,9 +344,49 @@ class Player {
   }
 
   draw() {
-    ctx.fillStyle = '#eee'
+    ctx.save()
+
+    ctx.translate(this.p.x, this.p.y)
+
+    // 身體
+    ctx.fillStyle = '#0047ba'
     // 玩家從上方中間開始繪製
-    ctx.fillRect(this.p.x - this.width / 2, this.p.y - this.height, this.width, this.height)
+    ctx.fillRect(-this.width / 2, -this.height, this.width, this.height)
+
+    // 眼白
+    ctx.beginPath()
+    ctx.arc(-6, -40, 5, 0, Math.PI * 2)
+    ctx.arc(6, -40, 5, 0, Math.PI * 2)
+    ctx.fillStyle = 'white'
+    ctx.fill()
+
+    // 眼珠
+    ctx.beginPath()
+    ctx.arc(-6, -40, 3, 0, Math.PI * 2)
+    ctx.arc(6, -40, 3, 0, Math.PI * 2)
+    ctx.fillStyle = 'black'
+    ctx.fill()
+
+    // 嘴巴
+    ctx.fillStyle = '#ffdd38'
+    ctx.fillRect(-5, -30, 10, 10)
+
+    // 右手
+    ctx.save()
+    ctx.translate(this.width / 2, -40)
+    ctx.rotate(-Math.log(this.v.y / 2)) // 會旋轉的手, 用玩家往下掉的速度來實作效果
+    ctx.fillStyle = '#416ee0'
+    ctx.fillRect(0, 0, 8, this.height / 2)
+    ctx.restore()
+    // 左手
+    ctx.save()
+    ctx.translate(-this.width / 2, -40)
+    ctx.rotate(Math.log(this.v.y / 2))
+    ctx.fillStyle = '#416ee0'
+    ctx.fillRect(-8, 0, 8, this.height / 2)
+    ctx.restore()
+
+    ctx.restore()
   }
 
   // 繪製血量
@@ -545,12 +585,10 @@ function mousedown(e) {
 window.addEventListener('keydown', evt => {
   let key = evt.key.replace('Arrow', '').toLowerCase()
   game.keystatus[key] = true
-  console.log(game.keystatus)
 })
 
 // 鍵盤放開時將 status 改為 false
 window.addEventListener('keyup', evt => {
   let key = evt.key.replace('Arrow', '').toLowerCase()
   game.keystatus[key] = false
-  console.log(game.keystatus)
 })
