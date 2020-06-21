@@ -243,6 +243,16 @@ class Game {
       }
     }
 
+    // 判斷玩家是否超出左右邊界
+    // 左邊界
+    if (this.player.p.x - this.player.width / 2 < 0) {
+      this.player.p.x = 0 + this.player.width / 2
+    }
+    // 右邊界
+    if (this.player.p.x + this.player.width / 2 > this.width) {
+      this.player.p.x = this.width - this.player.width / 2
+    }
+
     // 過濾掉已經超過畫面的階梯
     this.walls = this.walls.filter(wall => wall.active)
   }
