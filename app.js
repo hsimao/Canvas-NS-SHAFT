@@ -45,7 +45,10 @@ function init() {
 // == 更新畫面邏輯
 function update() {
   time++ //每秒會累加30
-  game.update()
+
+  if (game.playing) {
+    game.update()
+  }
 }
 
 // == 畫面更新
@@ -253,6 +256,11 @@ class Game {
       this.player.p.x = this.width - this.player.width / 2
     }
 
+    // 玩家掉落最底部範圍，遊戲結束
+    if (this.player.p.y > wh + this.player.height) {
+      game.end()
+    }
+
     // 過濾掉已經超過畫面的階梯
     this.walls = this.walls.filter(wall => wall.active)
   }
@@ -281,6 +289,18 @@ class Game {
     ctx.fillRect(0, 0, ww, wh)
 
     this.player.drawBlood()
+  }
+
+  start() {
+    $('button').hide()
+    this.init()
+    this.playing = true
+    this.time = 0
+  }
+
+  end() {
+    $('button').show()
+    this.playing = false
   }
 }
 // == 遊戲物件 End ==
@@ -330,6 +350,7 @@ class Player {
     if (this.blood < 0) {
       this.blood = 0
       // 遊戲結束
+      game.end()
     }
   }
 }
