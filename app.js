@@ -152,6 +152,32 @@ class Vec2 {
 }
 // == 向量物件End ==
 
+// 控制音效
+function playSound(id) {
+  document.getElementById(id).currentTime = 0
+  document.getElementById(id).play()
+}
+
+const soundMuteBtn = document.getElementById('soundMute')
+soundMuteBtn.addEventListener('click', e => {
+  e.target.isMute = !e.target.isMute
+  e.target.classList.toggle('active')
+  soundMute(e.target.isMute)
+})
+
+function soundMute(type) {
+  const audios = document.querySelectorAll('audio')
+  if (type) {
+    audios.forEach(audio => (audio.volume = 0))
+  } else {
+    document.getElementById('musicBg').volume = 0.5
+    document.getElementById('musicTransmiting').volume = 0.2
+    document.getElementById('musicStep').volume = 0.5
+  }
+}
+
+soundMute(false)
+
 // == 遊戲物件 ==
 class Game {
   constructor() {
@@ -233,6 +259,8 @@ class Game {
 
     if (!touching) {
       this.player.lastBlock = null
+      document.getElementById('musicTransmiting').pause()
+      document.getElementById('musicTransmiting').currentTime = 0
     }
 
     // 碰到上方邊界, 彈跳起來並扣血量
@@ -308,15 +336,18 @@ class Game {
   }
 
   start() {
-    $('button').hide()
+    $('#gameStart').hide()
     this.init()
     this.playing = true
     this.time = 0
+    playSound('musicBg')
   }
 
   end() {
-    $('button').show()
+    $('#gameStart').show()
     this.playing = false
+    playSound('musicDead')
+    document.getElementById('musicBg').pause()
   }
 }
 // == 遊戲物件 End ==
@@ -399,6 +430,11 @@ class Player {
 
   bloodDelta(delta) {
     this.blood += delta
+
+    if (delta < 0) {
+      playSound('musicHurt')
+    }
+
     if (this.blood > this.maxBlood) {
       this.blood = this.maxBlood
     }
@@ -518,6 +554,14 @@ class Wall {
     // 加血量
     if (player.lastBlock !== this) {
       player.bloodDelta(1)
+
+      if (this.type === 'normal' || this.type === 'fade') {
+        playSound('musicStep')
+      }
+
+      if (this.type === 'slideLeft' || this.type === 'slideRight') {
+        playSound('musicTransmiting')
+      }
     }
 
     // 扣血量
@@ -537,6 +581,7 @@ class Wall {
 
     // 跳躍
     if (this.type === 'jump') {
+      playSound('musicJump')
       player.v.y = -15
       this.extraHeight = 10 // 跳跳板往上彈
       TweenMax.to(this, 0.2, {
