@@ -4,16 +4,6 @@ const showMouse = true
 const bgColor = 'black'
 let time = 0
 
-// == 控制介面
-const controls = {
-  value: 0,
-}
-const gui = new dat.GUI()
-gui
-  .add(controls, 'value', -2, 2)
-  .step(0.01)
-  .onChange(function(value) {})
-
 // == canvas初始化
 const canvas = document.getElementById('canvas')
 const ctx = canvas.getContext('2d')
@@ -483,8 +473,6 @@ class Wall {
 
     // 畫出階梯
     ctx.fillStyle = '#888'
-    ctx.font = '20px Ariel'
-    ctx.fillText(this.type, 0, 30)
 
     if (this.type === 'normal' || this.type === 'hurt') {
       ctx.fillRect(0, 0, this.width, this.height / 2)
